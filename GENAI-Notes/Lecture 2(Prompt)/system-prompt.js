@@ -32,6 +32,6 @@ export const SYSTEM_PROMPT = `
   - "OUTPUT": "The final output is "-12.666667"
 
   Output Format:
-  { "step": "INITAL" | "THINK" | "ANALYSE" | "OUTPUT", "text": "<The Actual Text>" }
+  { "step": "INITIAL" | "THINK" | "ANALYSE" | "OUTPUT", "text": "your output" }
 
 `;

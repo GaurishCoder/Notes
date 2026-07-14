@@ -1,23 +1,22 @@
-import { OpenAI } from "openai";
-import dotenv from "dotenv";
-import { SYSTEM_PROMPT } from "./system-prompt.js";
-
+import { OpenAI } from 'openai';
+import { SYSTEM_PROMPT } from './system-prompt.js';
+import dotenv from 'dotenv';
 dotenv.config();
 
 const client = new OpenAI({
-  apiKey:
-    "",
-  baseURL: "https://integrate.api.nvidia.com/v1",
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.OPENROUTER_API_KEY,
 });
 
 const MESSAGES_DB = [{ role: 'system', content: SYSTEM_PROMPT }];
 
-async function init(prompt = '') {
+
+async function main(prompt = '') {
   MESSAGES_DB.push({ role: 'user', content: prompt });
 
   while (true) {
     const result = await client.chat.completions.create({
-      model: 'openai/gpt-oss-20b',
+      model: 'nvidia/nemotron-3-super-120b-a12b:free',
       messages: MESSAGES_DB,
     });
 
@@ -26,30 +25,10 @@ async function init(prompt = '') {
 
     MESSAGES_DB.push({ role: 'assistant', content: rawResult });
 
-    if (parsedResult?.step) {
-      console.log(`🤖 (${parsedResult?.step}): ${parsedResult?.text}`);
-    }
+    console.log(`🤖 (${parsedResult.step}): ${parsedResult.text}`);
 
-    if (parsedResult?.step.toLowerCase() === 'output') break;
+    if (parsedResult.step.toLowerCase() === 'output') break;
   }
 }
 
-// const MESSAGES_DB = [{role:"system",content:SYSTEM_PROMPT}];
-// async function init(prompt) {
-//   MESSAGES_DB.push[{role:"user",content:prompt}];
-//   while (true) {
-//      const result = await client.chat.completions.create({
-//       model:"openai/gpt-oss-20b",
-//       messages:MESSAGES_DB
-//      })
-
-//      const rawResult = result.choices[0].message.content;
-//      const parsedResult = JSON.parse(result.choices[0].message.content);
-//      MESSAGES_DB.push({role:"assistant",content:rawResult});
-
-//      console.log(`🤖 (${parsedResult?.step}): ${parsedResult?.text}`);
-//      if (parsedResult.step.toLowerCase() === 'output') break;
-//   }
-// }
-
-init("what is 3*1+(10-2)?");
+main('What is 3*3+(4/3)?');
