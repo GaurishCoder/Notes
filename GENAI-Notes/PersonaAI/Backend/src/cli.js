@@ -1,31 +1,13 @@
-import OpenAI from "openai";
 import dotenv from "dotenv";
-import { z } from "zod";
-import { zodTextFormat } from "openai/helpers/zod";
-import { SYSTEM_PROMPT } from "./system-prompt.js";
 import readline from "readline/promises";
+import { chatAIResponse } from "./chat.js";
+
+dotenv.config();
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
-
-dotenv.config();
-
-const client = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
-});
-
-async function chatAIResponse(prompt) {
-  const response = await client.responses.create({
-    model: "openrouter/free",
-    instructions: SYSTEM_PROMPT,
-    input: prompt,
-  });
-
-  return response.output_text;
-}
 
 const greetings = [
   "Hanji Batao... kaam ki baat karni hai ya time paas?",
@@ -61,13 +43,16 @@ const greetings = [
 ];
 
 function greeting() {
-  const greet = greetings[Math.floor(Math.random() * greetings.length) + 1];
+  // was `Math.floor(Math.random() * greetings.length) + 1`, which could
+  // index past the end of the array (or skip index 0) — fixed here.
+  const greet = greetings[Math.floor(Math.random() * greetings.length)];
   console.log(greet);
 }
 
 async function main() {
   greeting();
 
+  const history = [];
 
   while (true) {
     const input = await rl.question("YOU: ");
@@ -77,8 +62,11 @@ async function main() {
       return;
     }
 
-    const response = await chatAIResponse(input);
+    const response = await chatAIResponse(input, history);
     console.log(`AI: ${response}`);
+
+    history.push({ role: "user", content: input });
+    history.push({ role: "ai", content: response });
   }
 }
 
