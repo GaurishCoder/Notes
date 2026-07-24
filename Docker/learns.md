@@ -1,83 +1,65 @@
 # Docker Notes
 
 ## Docker
-- Docker is a platform used to build, package, and run applications in isolated environments called **containers**.
-- Provides a consistent environment across different systems.
-- Eliminates manual software installation and configuration.
-- Uses **Docker Engine** to create and manage containers.
+- Docker ek platform hai jo applications ko **containers** ke andar build, package aur run karta hai.
+- Har system par same environment provide karta hai.
+- Software ko manually install aur configure karne ki zarurat kam ho jati hai.
+- Containers ko create aur manage karne ke liye **Docker Engine** use hota hai.
 
 ---
 
 ## Docker Image
-- A **read-only template** used to create containers.
-- Contains:
+- Docker Image ek **read-only template** hoti hai jisse containers create hote hain.
+- Isme hota hai:
   - Application code
   - Runtime
   - Dependencies
   - Configuration files
-- Images are immutable.
-- One image can create multiple containers.
+- Image immutable hoti hai (change nahi hoti).
+- Ek image se multiple containers ban sakte hain.
 
 ---
 
 ## Docker Container
-- A **running instance** of a Docker image.
-- Lightweight and isolated from the host system.
-- Has its own filesystem, processes, and network.
-- Can be started, stopped, restarted, and removed.
+- Docker Container ek **running instance** hota hai Docker Image ka.
+- Lightweight aur host system se isolated hota hai.
+- Iska apna:
+  - Filesystem
+  - Processes
+  - Network
+  hota hai.
+- Container ko start, stop, restart aur remove kiya ja sakta hai.
 
 ---
 
 ## Docker Network
-- Enables communication between containers.
-- Each container gets its own IP address.
-- Containers on the same network communicate using container names.
-- Isolated from other Docker networks by default.
+- Containers ko aapas me communicate karne ke liye use hota hai.
+- Har container ka apna IP address hota hai.
+- Same network ke containers **container name** se communicate kar sakte hain.
+- Har Docker network dusre networks se by default isolated hota hai.
 
 ---
 
 ## Docker Hub
-- A cloud-based registry for Docker images.
-- Stores official and custom images.
-- Images can be pulled from and pushed to Docker Hub.
+- Docker Images store karne ke liye cloud-based registry hai.
+- Official aur custom images dono store ki ja sakti hain.
+- Images ko pull aur push kiya ja sakta hai.
 
 ---
 
 ## Why Docker?
-- No manual software installation.
-- Consistent development environment.
-- Easy application setup and deployment.
-- Prevents dependency and version conflicts.
-- Applications remain isolated from the host system.
+- Software manually install karne ki zarurat nahi hoti.
+- Sab developers ko same environment milta hai.
+- Application setup aur deployment easy ho jata hai.
+- Dependency aur version conflicts avoid hote hain.
+- Applications host system se isolated rehti hain.
 
----
 
-## Common Docker Commands
-
-```bash
-docker pull
-docker images
-docker ps
-docker ps -a
-docker run
-docker start
-docker stop
-docker restart
-docker rm
-docker rmi
-docker logs
-docker exec
-docker network ls
-docker network create
-docker network inspect
-```
-
----
 
 ## Quick Revision
 
-- **Docker** → Platform for running applications in containers.
-- **Image** → Read-only template used to create containers.
-- **Container** → Running instance of an image.
-- **Network** → Allows communication between containers.
-- **Docker Hub** → Registry for Docker images.
+- **Docker** → Applications ko containers me run karne ka platform.
+- **Image** → Read-only template jisse containers bante hain.
+- **Container** → Image ka running instance.
+- **Network** → Containers ko aapas me communicate karne deta hai.
+- **Docker Hub** → Docker Images ki registry.
