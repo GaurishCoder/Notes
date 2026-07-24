@@ -1,42 +1,54 @@
 const express = require("express");
-const app = express();
-const path = require("path");
-const MongoClient = require("mongodb").MongoClient;
+const { MongoClient } = require("mongodb");
 
-const PORT = 5050;
+const app = express();
+
+const PORT = 3000;
+
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use(express.json());
 
 const MONGO_URL = "mongodb://admin:qwerty@localhost:27017";
+
 const client = new MongoClient(MONGO_URL);
 
-//GET all users
+async function connectDB() {
+  await client.connect();
+  console.log("✅ Connected to MongoDB");
+}
+
+connectDB();
+
+app.get("/", (req, res) => {
+  res.send("Hello");
+});
+
 app.get("/getUsers", async (req, res) => {
-    await client.connect(URL);
-    console.log('Connected successfully to server');
+  try {
+    const db = client.db("gaurish-db");
 
-    const db = client.db("apnacollege-db");
-    const data = await db.collection('users').find({}).toArray();
-    
-    client.close();
-    res.send(data);
+    const users = await db.collection("users").find({}).toArray();
+
+    res.json(users);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err.message);
+  }
 });
 
-//POST new user
 app.post("/addUser", async (req, res) => {
-    const userObj = req.body;
-    console.log(req.body);
-    await client.connect(URL);
-    console.log('Connected successfully to server');
+  try {
+    const db = client.db("gaurish-db");
 
-    const db = client.db("apnacollege-db");
-    const data = await db.collection('users').insertOne(userObj);
-    console.log(data);
-    console.log("data inserted in DB");
-    client.close();
+    const result = await db.collection("users").insertOne(req.body);
+
+    res.send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err.message);
+  }
 });
-
 
 app.listen(PORT, () => {
-    console.log(`server running on port ${PORT}`);
+  console.log(`Server running on ${PORT}`);
 });
