@@ -19,7 +19,9 @@
     "@openrouter/sdk": "^0.13.40",
     "axios": "^1.18.1",
     "dotenv": "^17.4.2",
+    "langchain": "^1.5.4",
     "openai": "^6.46.0",
+    "pdf-parse": "^2.4.5",
     "zod": "^4.4.3"
   }
 }
