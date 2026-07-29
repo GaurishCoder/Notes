@@ -13,7 +13,6 @@ async function generateVectorEmbeddingForFile(filepath) {
   const embeddings = new OpenAIEmbeddings({
     apiKey: process.env.OPENROUTER_API_KEY,
     model: "nvidia/llama-nemotron-embed-vl-1b-v2:free",
-    
     configuration: {
       baseURL: "https://openrouter.ai/api/v1",
     },
@@ -21,7 +20,7 @@ async function generateVectorEmbeddingForFile(filepath) {
 
   // Vector Store
   const vectorStore = await QdrantVectorStore.fromDocuments(
-      document,
+    document,
     embeddings,
     //your vector working url
     {
