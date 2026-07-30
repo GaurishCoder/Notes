@@ -2,11 +2,30 @@ import "../config.js";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { QdrantVectorStore } from "@langchain/qdrant";
 import { OpenAI } from "openai";
+import readline from "readline/promises";
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
 const client = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
   baseURL: "https://openrouter.ai/api/v1",
 });
+
+async function acceptUserInput() {
+  while (true) {
+    const input = await rl.question("🧑 YOU:");
+    if (input.toLowerCase() === "bye") {
+      rl.close();
+      return;
+    }
+    await userQuery(input);
+  }
+}
+
+acceptUserInput();
 
 async function userQuery(query) {
   // Convert user query to vector embeddings?
@@ -41,15 +60,20 @@ async function userQuery(query) {
     ${results.map((e) => JSON.stringify({ bookName: e.metadata.source, pageContent: e.pageContent, pageNumber: e.metadata.loc.pageNumber })).join("\n\n")}
   `;
 
+  await aiResponse(SYSTEM_PROMPT, query);
+}
+
+async function aiResponse(SYSTEM_PROMPT, query) {
+  let history = [{ role: "system", content: SYSTEM_PROMPT }];
+
+  history.push({ role: "user", content: query });
+
   const response = await client.chat.completions.create({
     model: "openrouter/free",
-    messages: [
-      { role: "system", content: SYSTEM_PROMPT },
-      { role: "user", content: query },
-    ],
+    messages: history,
   });
+  const data = response.choices[0].message.content;
+  history.push({ role: "assistant", content: JSON.stringify(data) });
 
-  console.log("LLM Response:\n\n", response.choices[0].message.content);
+  console.log(`🤖 LLM Response:\n\n`, data);
 }
-userQuery("which question is most frequenctly ask?");
-
